@@ -48,82 +48,184 @@ HuggingFace Datasets (Indian Courts)
 FAISS Vector DB
 LangChain + Google Gemini API
 Indian Kanoon API integration
+LegalEase - AI Legal Assistant Platform
+A comprehensive legal assistant platform that provides AI-powered legal guidance, contract generation, and case research capabilities for the Indian legal system.
+Show Image
+🌟 Features
 
-⚙️ Installation
-1. Backend (Node.js) Setup
-cd backend
+AI Legal Chat: Get instant legal advice powered by Google Gemini AI
+Contract Generator: Create professional contracts with 6+ templates (Rental, Employment, Service, Sales, NDA, Partnership)
+Case Research: Search through Indian legal database and precedents
+User Management: Secure authentication with password reset functionality
+Admin Dashboard: Complete admin panel for user and contract management
+Document Export: Generate PDF contracts and save for future reference
+Real-time Search: Integration with Indian Kanoon API for live legal case data
+
+🚀 Tech Stack
+Backend
+
+Node.js with Express.js
+SQLite3 database with SQL.js
+JWT authentication
+bcrypt password hashing
+nodemailer for email services
+
+Frontend
+
+Vanilla JavaScript with modern ES6+
+CSS3 with glassmorphism design
+Responsive design for all devices
+
+AI & Search
+
+Python FastAPI RAG service
+Google Gemini AI for legal guidance
+Indian Kanoon API integration
+FAISS for vector search (optional)
+
+📋 Prerequisites
+Before running this application, make sure you have:
+
+Node.js (v18 or higher)
+Python (v3.8 or higher)
+npm (v9 or higher)
+Git
+
+🛠️ Installation & Setup
+1. Clone the Repository
+bashgit clone https://github.com/yourusername/legalease.git
+cd legalease
+2. Backend Setup
+bash# Install Node.js dependencies
 npm install
 
-
-Create .env in /backend with:
-JWT_SECRET=supersecretkey
-
-
-Run backend:
-node server.js
-
-Runs on: http://localhost:5000
-
-3. RAG Service (Python) Setup
-cd rag
+# Or if you have a package-lock.json
+npm ci
+3. Python RAG Service Setup
+bash# Install Python dependencies
 pip install -r requirements.txt
 
+# Or using virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+4. Environment Configuration
+Create a .env file in the project root:
+env# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key_here
 
-Create .env in /rag with:
+# Email Configuration (Gmail)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-gmail-app-password
 
-GOOGLE_API_KEY=your_gemini_api_key
-INDIAN_KANOON_API_KEY=your_indian_kanoon_api_key
-RAG_INDEX_DIR=./rag/faiss_index
-DATASET_NAME=santoshtyss/indian_courts_cases
-DATASET_SPLIT=train
-MAX_ROWS=15000
+# Google AI Configuration
+GOOGLE_API_KEY=your-google-gemini-api-key
 
+# Indian Kanoon API (Optional)
+INDIAN_KANOON_API_KEY=your-indian-kanoon-api-key
 
-Run RAG service:
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+5. Database Initialization
+The SQLite database will be automatically created when you first run the server. It includes:
 
-uvicorn rag_service:app --reload --host 0.0.0.0 --port 8000
+Users table with admin account
+Contracts table for document storage
+Contract templates with pre-built forms
+Password reset tokens table
 
-4. Frontend Setup
+🚀 Running the Application
+Start the Backend Server
+bashnpm start
+# Or for development with auto-reload
+npm run dev
+Start the RAG Service
+In a separate terminal:
+bashpython rag_service.py
+Or using uvicorn:
+bashuvicorn rag_service:app --host 0.0.0.0 --port 8000 --reload
+Access the Application
 
-The frontend is served automatically by the Node.js backend.
-Open: http://localhost:5000
+Main Application: http://localhost:5000
+RAG Service API: http://localhost:8000
+RAG Service Docs: http://localhost:8000/docs
 
-📖 Usage
-
-Signup/Login to access the dashboard.
-
-Navigate to:
-Case Research → Search for Indian case laws.
-LegalEase AI → Chat with the AI for summaries.
-Contract Generator → Create and save contracts.
-Backend proxies all /api/chat requests to the Python RAG service.
-RAG service fetches from FAISS + Indian Kanoon API + Gemini to give responses.
-
-📂 Project Structure
+👤 Default Admin Account
+Email: adminsid@gmail.com
+Password: Coffee@030903
+📁 Project Structure
 legalease/
-├── backend/          # Node.js backend (Express + SQLite)
-│   ├── server.js
-│   └── legalease.db
-├── rag/              # Python RAG service
-│   ├── rag_service.py
-│   └── faiss_index/
-├── public/           # Frontend (HTML, CSS, JS)
-│   ├── index.html
-│   ├── chat.html
-│   ├── research.html
-│   ├── contracts.html
-│   └── script.js
-└── README.md
+├── server.js                 # Main Express server
+├── rag_service.py            # Python FastAPI service for AI
+├── package.json              # Node.js dependencies
+├── requirements.txt          # Python dependencies
+├── legalease.db              # SQLite database (auto-created)
+├── .env                      # Environment variables
+├── .gitignore               # Git ignore rules
+├── README.md                # Project documentation
+│
+├── Frontend Files:
+├── login.html               # Login page
+├── signup.html              # Registration page  
+├── index.html               # Main dashboard
+├── contracts.html           # Contract generator
+├── research.html            # Case research
+├── chat.html                # AI chat interface
+├── profile.html             # User profile
+├── admin-dashboard.html     # Admin panel
+├── style.css                # Main stylesheet
+└── script.js                # Frontend JavaScript
+🔧 API Endpoints
+Authentication
 
+POST /api/signup - User registration
+POST /api/login - User login
+POST /api/forgot-password - Request password reset
+POST /api/verify-reset-code - Verify reset code
+POST /api/reset-password - Reset password
 
+User Management
 
-🔮 Future Improvements
+GET /api/profile - Get user profile
+POST /api/change-password - Change password
 
-Add support for multi-lingual queries (Hindi, Tamil, etc.)
-Add advanced filters (by court, year, bench, etc.)
-Enable contract templates with AI drafting
-Deploy on cloud (Render / Railway / Vercel + Fly.io for FastAPI)
+Contracts
 
-📝 License
+GET /api/contract-templates - Get all templates
+GET /api/contracts - Get user contracts
+POST /api/contracts - Create new contract
+PUT /api/contracts/:id - Update contract
+DELETE /api/contracts/:id - Delete contract
+GET /api/contracts/analytics - Contract analytics
 
-MIT License © 2025
+AI & Search
+
+POST /api/chat - AI legal chat
+GET /api/search - Case research
+
+Admin Routes
+
+GET /api/admin/users - Manage users
+GET /api/admin/stats - Platform statistics
+GET /api/admin/contracts - All contracts
+
+🎨 Contract Templates
+The platform includes 6 professional contract templates:
+
+Rental Agreement - Comprehensive residential property rental
+Employment Contract - Standard employment with Indian labor law compliance
+Service Agreement - Professional service contracts
+Sales Agreement - Goods and services sales contracts
+Non-Disclosure Agreement (NDA) - Confidentiality agreements
+Partnership Agreement - Business partnership with profit sharing
+
+🔐 Security Features
+
+JWT-based authentication
+Bcrypt password hashing
+SQL injection protection
+CORS enabled
+Input validation and sanitization
+Secure password reset with email verification
+Admin role-based access control
